@@ -8,31 +8,38 @@ dom.numbers = document.querySelector(".numbers");
 dom.display = document.querySelector(".display");
 dom.operators = document.querySelector(".operators");
 
+buildDOM();
 updateDisplay(0);
-populateOperatorsInDOM();
 
-for (let i = 0; i <= 9; i++) {
-    const number = document.createElement("button");
-    number.textContent = i;
-    number.addEventListener("click", pressDigit);
+function buildDOM() {
+    placeNumbers();
+    placeOperators();
 
-    dom.numbers.appendChild(number);
-}
+    function placeNumbers() {
+        for (let i = 0; i <= 9; i++) {
+            const button = document.createElement("button");
+            button.textContent = i;
+            button.setAttribute("data-value", i);
+            button.addEventListener("click", pressDigit);
+            dom.numbers.appendChild(button);
+        }
+    }
 
-
-function populateOperatorsInDOM() {
-    const operators = ["+", "-", "*", "/"];
-    for (const operator of operators) {
-        const button = document.createElement("button");
-        button.textContent = operator;
-        button.addEventListener("click", pressOperator);
-        button.setAttribute("data-value", operator);
-        dom.operators.appendChild(button);
+    function placeOperators() {
+        const operators = ["+", "-", "*", "/"];
+        const operatorSymbols = ["+", "-", "×", "÷"];
+        operators.forEach((operator, index) => {
+            const button = document.createElement("button");
+            button.textContent = operatorSymbols[index];
+            button.setAttribute("data-value", operator);
+            button.addEventListener("click", pressOperator);
+            dom.operators.appendChild(button);
+        })
     }
 }
 
 function pressDigit(e) {
-    const value = e.currentTarget.textContent;
+    const value = e.currentTarget.getAttribute("data-value");
     if (num == "0") {
         num = value;
     }
@@ -50,10 +57,10 @@ function pressOperator(e) {
     else {
         cache = doOperation(operator, cache, +num);
     }
+    num = "0";
 
     operator = e.currentTarget.getAttribute("data-value");
     updateDisplay(cache);
-    num = "0";
 }
 
 function doOperation(operator, a, b) {
