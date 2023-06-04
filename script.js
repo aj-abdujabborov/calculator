@@ -1,5 +1,5 @@
 var cache = null;
-var num = "0";
+var num = "";
 var operator = null;
 // var display = "0";
 
@@ -40,24 +40,18 @@ function buildDOM() {
 
 function pressDigit(e) {
     const value = e.currentTarget.getAttribute("data-value");
-    if (num == "0") {
-        num = value;
-    }
-    else {
-        num += value;
-    }
-
+    num += value;
     updateDisplay(num);
 }
 
 function pressOperator(e) {
     if (cache === null) {
         cache = +num;
-    }
+    } 
     else {
         cache = doOperation(operator, cache, +num);
     }
-    num = "0";
+    num = "";
 
     operator = e.currentTarget.getAttribute("data-value");
     updateDisplay(cache);
@@ -72,5 +66,6 @@ function doOperation(operator, a, b) {
 }
 
 function updateDisplay(content) {
+    if (content === "") content = "0";
     dom.display.textContent = content;
 }
