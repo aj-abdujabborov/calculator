@@ -1,7 +1,4 @@
-var prevNum = null;
-var nextNum = "";
-var operator = null;
-// var display = "0";
+var prevNum, nextNum, operator;
 
 const dom = {};
 dom.numbers = document.querySelector(".numbers");
@@ -9,12 +6,13 @@ dom.display = document.querySelector(".display");
 dom.operators = document.querySelector(".operators");
 
 buildDOM();
-updateDisplay(0);
+pressAC();
 
 function buildDOM() {
     placeNumbers();
     placeDot();
     placeOperators();
+    placeAC();
 
     function placeNumbers() {
         for (let i = 0; i <= 9; i++) {
@@ -45,6 +43,14 @@ function buildDOM() {
             dom.operators.appendChild(button);
         })
     }
+
+    function placeAC() {
+        const button = document.createElement("button");
+        button.textContent = "AC";
+        button.setAttribute("data-value", "ac");
+        button.addEventListener("click", pressAC);
+        dom.operators.appendChild(button);
+    }
 }
 
 function pressDigit(e) {
@@ -68,6 +74,13 @@ function pressOperator(e) {
 
     operator = e.currentTarget.getAttribute("data-value");
     updateDisplay(prevNum);
+}
+
+function pressAC() {
+    prevNum = null;
+    nextNum = "";
+    operator = null;
+    updateDisplay(0);
 }
 
 function getOperationResult(operator, a, b) {
