@@ -1,9 +1,9 @@
 var prevNum, nextNum, operator;
 
 const dom = {};
-dom.numbers = document.querySelector(".numbers");
 dom.display = document.querySelector(".display");
-dom.operators = document.querySelector(".operators");
+dom.leftButtons = document.querySelector(".left");
+dom.rightButtons = document.querySelector(".right");
 
 buildDOM();
 pressAC();
@@ -15,18 +15,18 @@ function buildDOM() {
 
     function placeNumbers() {
         for (let i = 9; i >= 1; i--) {
-            placeButton(i, i, pressDigit, dom.numbers);
+            placeButton(i, i, pressDigit, dom.leftButtons);
         }
-        placeButton('+/-', '+/-', pressDigit, dom.numbers);
-        placeButton('.', '.', pressDigit, dom.numbers);
-        placeButton(0, 0, pressDigit, dom.numbers);
+        placeButton('+/-', '+/-', pressDigit, dom.leftButtons);
+        placeButton('.', '.', pressDigit, dom.leftButtons);
+        placeButton(0, 0, pressDigit, dom.leftButtons);
     }
 
     function placeOperators() {
         const operators = ["+", "-", "*", "/", "="];
         const operatorSymbols = ["+", "-", "×", "÷", "="];
         operators.forEach((operator, index) => {
-            placeButton(operatorSymbols[index], operator, pressOperator, dom.operators)
+            placeButton(operatorSymbols[index], operator, pressOperator, dom.rightButtons)
         });
     }
 
@@ -35,7 +35,7 @@ function buildDOM() {
         button.textContent = "AC";
         button.setAttribute("data-value", "ac");
         button.addEventListener("click", pressAC);
-        dom.operators.appendChild(button);
+        dom.rightButtons.appendChild(button);
     }
 
     function placeButton(text, data, callback, parent) {

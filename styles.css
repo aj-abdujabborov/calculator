@@ -36,23 +36,23 @@ button {
     align-items: center;
 }
 
-.numbers {
+.left {
     width: 60%;
     display: flex;
     flex-wrap: wrap;
     flex-direction: row-reverse;
 }
 
-.numbers > button {
+.left > button {
     width: 33.333%;
 }
 
-.operators {
+.right {
     width: 40%;
     display: flex;
     flex-wrap: wrap;
 }
 
-.operators > button {
+.right > button {
     width: 50%;
 }
