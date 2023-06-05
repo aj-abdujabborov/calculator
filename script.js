@@ -10,38 +10,24 @@ pressAC();
 
 function buildDOM() {
     placeNumbers();
-    placeDot();
     placeOperators();
     placeAC();
 
     function placeNumbers() {
-        for (let i = 0; i <= 9; i++) {
-            const button = document.createElement("button");
-            button.textContent = i;
-            button.setAttribute("data-value", i);
-            button.addEventListener("click", pressDigit);
-            dom.numbers.appendChild(button);
+        for (let i = 9; i >= 1; i--) {
+            placeButton(i, i, pressDigit, dom.numbers);
         }
-    }
-
-    function placeDot() {
-        const button = document.createElement("button");
-        button.textContent = ".";
-        button.setAttribute("data-value", ".");
-        button.addEventListener("click", pressDigit);
-        dom.numbers.appendChild(button);
+        placeButton('+/-', '+/-', pressDigit, dom.numbers);
+        placeButton('.', '.', pressDigit, dom.numbers);
+        placeButton(0, 0, pressDigit, dom.numbers);
     }
 
     function placeOperators() {
         const operators = ["+", "-", "*", "/", "="];
         const operatorSymbols = ["+", "-", "×", "÷", "="];
         operators.forEach((operator, index) => {
-            const button = document.createElement("button");
-            button.textContent = operatorSymbols[index];
-            button.setAttribute("data-value", operator);
-            button.addEventListener("click", pressOperator);
-            dom.operators.appendChild(button);
-        })
+            placeButton(operatorSymbols[index], operator, pressOperator, dom.operators)
+        });
     }
 
     function placeAC() {
@@ -50,6 +36,14 @@ function buildDOM() {
         button.setAttribute("data-value", "ac");
         button.addEventListener("click", pressAC);
         dom.operators.appendChild(button);
+    }
+
+    function placeButton(text, data, callback, parent) {
+        const button = document.createElement("button");
+        button.textContent = text;
+        button.setAttribute("data-value", data);
+        button.addEventListener("click", callback);
+        parent.appendChild(button);
     }
 }
 
