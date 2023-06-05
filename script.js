@@ -1,5 +1,5 @@
-var cache = null;
-var num = "";
+var prevNum = null;
+var nextNum = "";
 var operator = null;
 // var display = "0";
 
@@ -26,8 +26,8 @@ function buildDOM() {
     }
 
     function placeOperators() {
-        const operators = ["+", "-", "*", "/"];
-        const operatorSymbols = ["+", "-", "×", "÷"];
+        const operators = ["+", "-", "*", "/", "="];
+        const operatorSymbols = ["+", "-", "×", "÷", "="];
         operators.forEach((operator, index) => {
             const button = document.createElement("button");
             button.textContent = operatorSymbols[index];
@@ -40,32 +40,34 @@ function buildDOM() {
 
 function pressDigit(e) {
     const value = e.currentTarget.getAttribute("data-value");
-    num += value;
-    updateDisplay(num);
+    nextNum += value;
+    updateDisplay(nextNum);
 }
 
 function pressOperator(e) {
-    if (cache === null) {
-        cache = +num;
-    } 
-    else {
-        cache = doOperation(operator, cache, +num);
+    if (prevNum === null) {
+        prevNum = +nextNum;
     }
-    num = "";
+    else if (nextNum !== "") {
+        prevNum = getOperationResult(operator, prevNum, +nextNum);
+    }
+    nextNum = "";
 
     operator = e.currentTarget.getAttribute("data-value");
-    updateDisplay(cache);
+    updateDisplay(prevNum);
 }
 
-function doOperation(operator, a, b) {
+function getOperationResult(operator, a, b) {
     this["+"] = (a,b) => (a + b);
     this["-"] = (a,b) => (a - b);
     this["*"] = (a,b) => (a * b);
-    this["/"] = (a, b) => (b === 0 ? "nope" : a / b);
+    this["/"] = (a, b) => (b === 0 ? NaN : a / b);
+    this["="] = (a, b) => (b);
     return this[operator](a, b);
 }
 
 function updateDisplay(content) {
     if (content === "") content = "0";
+    if (isNaN(content)) content = "nope";
     dom.display.textContent = content;
 }
