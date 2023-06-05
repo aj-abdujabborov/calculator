@@ -9,11 +9,10 @@ buildDOM();
 pressAC();
 
 function buildDOM() {
-    placeNumbers();
-    placeOperators();
-    placeAC();
+    addLeftButtons();
+    addRightButtons();
 
-    function placeNumbers() {
+    function addLeftButtons() {
         for (let i = 9; i >= 1; i--) {
             placeButton(i, i, pressDigit, dom.leftButtons);
         }
@@ -22,20 +21,17 @@ function buildDOM() {
         placeButton(0, 0, pressDigit, dom.leftButtons);
     }
 
-    function placeOperators() {
-        const operators = ["+", "-", "*", "/", "="];
-        const operatorSymbols = ["+", "-", "×", "÷", "="];
+    function addRightButtons() {
+        placeButton("Del", "del", pressDigit, dom.rightButtons);
+        placeButton("AC", "ac", pressAC, dom.rightButtons);
+    
+        const operators = ["+", "-", "*", "/"];
+        const operatorSymbols = ["+", "-", "×", "÷"];
         operators.forEach((operator, index) => {
             placeButton(operatorSymbols[index], operator, pressOperator, dom.rightButtons)
         });
-    }
-
-    function placeAC() {
-        const button = document.createElement("button");
-        button.textContent = "AC";
-        button.setAttribute("data-value", "ac");
-        button.addEventListener("click", pressAC);
-        dom.rightButtons.appendChild(button);
+        placeButton("%", "%", pressDigit, dom.rightButtons);
+        placeButton("=", "=", pressOperator, dom.rightButtons);
     }
 
     function placeButton(text, data, callback, parent) {
