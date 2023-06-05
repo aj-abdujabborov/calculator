@@ -13,6 +13,7 @@ updateDisplay(0);
 
 function buildDOM() {
     placeNumbers();
+    placeDot();
     placeOperators();
 
     function placeNumbers() {
@@ -23,6 +24,14 @@ function buildDOM() {
             button.addEventListener("click", pressDigit);
             dom.numbers.appendChild(button);
         }
+    }
+
+    function placeDot() {
+        const button = document.createElement("button");
+        button.textContent = ".";
+        button.setAttribute("data-value", ".");
+        button.addEventListener("click", pressDigit);
+        dom.numbers.appendChild(button);
     }
 
     function placeOperators() {
@@ -40,6 +49,10 @@ function buildDOM() {
 
 function pressDigit(e) {
     const value = e.currentTarget.getAttribute("data-value");
+    if (value === ".") {
+        if (nextNum.includes(".")) return;
+        if (nextNum === "") nextNum = "0";
+    }
     nextNum += value;
     updateDisplay(nextNum);
 }
