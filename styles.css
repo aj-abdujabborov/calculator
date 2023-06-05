@@ -1,5 +1,58 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 44px;
+}
+
+button {
+    aspect-ratio: 1;
+}
+
+.calculator {
+    width: 400px;
+    background-color: lightblue;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: start;
+}
+
 .display {
-    width: 200px;
+    padding: 5px;
+    height: 40px;
     border-radius: 10px;
     background-color: grey;
+    
+    flex: 0 0 100%;
+    
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+.numbers {
+    width: 60%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row-reverse;
+}
+
+.numbers > button {
+    width: 33.333%;
+}
+
+.operators {
+    width: 40%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.operators > button {
+    width: 50%;
 }
