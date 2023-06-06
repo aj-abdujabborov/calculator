@@ -16,8 +16,8 @@ function buildDOM() {
         for (let i = 9; i >= 1; i--) {
             placeButton(i, i, pressDigit, dom.leftButtons);
         }
-        placeButton('+/-', '+/-', pressDigit, dom.leftButtons);
-        placeButton('.', '.', pressDigit, dom.leftButtons);
+        placeButton('+/-', '+/-', pressPlusMinus, dom.leftButtons);
+        placeButton('.', '.', pressDot, dom.leftButtons);
         placeButton(0, 0, pressDigit, dom.leftButtons);
     }
 
@@ -45,12 +45,42 @@ function buildDOM() {
 
 function pressDigit(e) {
     const value = e.currentTarget.getAttribute("data-value");
-    if (value === ".") {
-        if (nextNum.includes(".")) return;
-        if (nextNum === "") nextNum = "0";
+    if (nextNum.startsWith("0") || nextNum.startsWith("-0")) {
+        if (value == 0) return;
+        nextNum = nextNum.replace("0", "");
     }
     nextNum += value;
     updateDisplay(nextNum);
+}
+
+function pressDot(e) {
+    if (nextNum.includes(".")) return;
+    if (nextNum === "") nextNum = "0.";
+    updateDisplay(nextNum);
+}
+
+function pressPlusMinus(e) {
+    if (nextNum !== "") {
+        nextNum = getInvertedSignAsString(nextNum);
+        updateDisplay(nextNum);
+    }
+    else {
+        if (prevNum === null || operator !== "=") {
+            nextNum = "-0";
+            updateDisplay(nextNum);
+        }
+        else {
+            prevNum = +getInvertedSignAsString(prevNum);
+            updateDisplay(prevNum);
+        }
+    }
+
+    function getInvertedSignAsString(num) {
+        num = num.toString();
+        if (num === "0") return "-0";
+        return (+num * -1).toString();
+        // Because (-0).toString -> "0"
+    }
 }
 
 function pressOperator(e) {
