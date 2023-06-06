@@ -64,7 +64,11 @@ function pressDigit(e) {
 
 function pressDot(e) {
     if (input.includes(".")) return;
-    if (isEmptyString(input)) input = "0.";
+    if (isEmptyString(input)) {
+        input = "0.";
+        return;
+    }
+    input += ".";
     updateDisplay(input);
 }
 
