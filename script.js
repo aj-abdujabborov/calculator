@@ -1,4 +1,4 @@
-var prevNum, nextNum, operator;
+var storage, input, operator;
 
 const dom = {};
 dom.display = document.querySelector(".display");
@@ -45,33 +45,33 @@ function buildDOM() {
 
 function pressDigit(e) {
     const value = e.currentTarget.getAttribute("data-value");
-    if (nextNum.startsWith("0") || nextNum.startsWith("-0")) {
+    if (input.startsWith("0") || input.startsWith("-0")) {
         if (value == 0) return;
-        nextNum = nextNum.replace("0", "");
+        input = input.replace("0", "");
     }
-    nextNum += value;
-    updateDisplay(nextNum);
+    input += value;
+    updateDisplay(input);
 }
 
 function pressDot(e) {
-    if (nextNum.includes(".")) return;
-    if (nextNum === "") nextNum = "0.";
-    updateDisplay(nextNum);
+    if (input.includes(".")) return;
+    if (isEmptyString(input)) input = "0.";
+    updateDisplay(input);
 }
 
 function pressPlusMinus(e) {
-    if (nextNum !== "") {
-        nextNum = getInvertedSignAsString(nextNum);
-        updateDisplay(nextNum);
+    if (!isEmptyString(content)) {
+        input = getInvertedSignAsString(input);
+        updateDisplay(input);
     }
     else {
-        if (prevNum === null || operator !== "=") {
-            nextNum = "-0";
-            updateDisplay(nextNum);
+        if (storage === null || operator !== "=") {
+            input = "-0";
+            updateDisplay(input);
         }
         else {
-            prevNum = +getInvertedSignAsString(prevNum);
-            updateDisplay(prevNum);
+            storage = +getInvertedSignAsString(storage);
+            updateDisplay(storage);
         }
     }
 
@@ -84,21 +84,21 @@ function pressPlusMinus(e) {
 }
 
 function pressOperator(e) {
-    if (prevNum === null) {
-        prevNum = +nextNum;
+    if (storage === null) {
+        storage = +input;
     }
-    else if (nextNum !== "") {
-        prevNum = getOperationResult(operator, prevNum, +nextNum);
+    else if (!isEmptyString(input)) {
+        storage = getOperationResult(operator, storage, +input);
     }
-    nextNum = "";
+    input = "";
 
     operator = e.currentTarget.getAttribute("data-value");
-    updateDisplay(prevNum);
+    updateDisplay(storage);
 }
 
 function pressAC() {
-    prevNum = null;
-    nextNum = "";
+    storage = null;
+    input = "";
     operator = null;
     updateDisplay(0);
 }
@@ -113,7 +113,11 @@ function getOperationResult(operator, a, b) {
 }
 
 function updateDisplay(content) {
-    if (content === "") content = "0";
+    if (isEmptyString(content)) content = "0";
     if (isNaN(content)) content = "nope";
     dom.display.textContent = content;
+}
+
+function isEmptyString(string) {
+    return string === "";
 }
