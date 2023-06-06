@@ -1,4 +1,7 @@
-var storage, input, operator;
+var storage, input, operator, state;
+const STATE_ENTERING = 1;
+const STATE_COMPLETE = 2;
+const STATE_EQUALS_PRESSED = 3;
 
 const dom = {};
 dom.display = document.querySelector(".display");
@@ -44,6 +47,10 @@ function buildDOM() {
 }
 
 function pressDigit(e) {
+    if (state === STATE_EQUALS_PRESSED) {
+        storage = null;
+    }
+
     const value = e.currentTarget.getAttribute("data-value");
     if (input.startsWith("0") || input.startsWith("-0")) {
         if (value == 0) return;
@@ -51,6 +58,8 @@ function pressDigit(e) {
     }
     input += value;
     updateDisplay(input);
+
+    state = STATE_ENTERING;
 }
 
 function pressDot(e) {
@@ -60,24 +69,18 @@ function pressDot(e) {
 }
 
 function pressPlusMinus(e) {
-    if (!isEmptyString(content)) {
+    if (state === STATE_ENTERING || state == STATE_COMPLETE) {
         input = getInvertedSignAsString(input);
         updateDisplay(input);
     }
     else {
-        if (storage === null || operator !== "=") {
-            input = "-0";
-            updateDisplay(input);
-        }
-        else {
-            storage = +getInvertedSignAsString(storage);
-            updateDisplay(storage);
-        }
+        storage = +getInvertedSignAsString(storage);
+        updateDisplay(storage);
     }
 
     function getInvertedSignAsString(num) {
         num = num.toString();
-        if (num === "0") return "-0";
+        if (num === "0" || num === "") return "-0";
         return (+num * -1).toString();
         // Because (-0).toString -> "0"
     }
@@ -94,22 +97,25 @@ function pressOperator(e) {
 
     operator = e.currentTarget.getAttribute("data-value");
     updateDisplay(storage);
+
+    state = STATE_COMPLETE;
+    if (operator === "=") state = STATE_EQUALS_PRESSED;
+
+    function getOperationResult(operator, a, b) {
+        this["+"] = (a,b) => (a + b);
+        this["-"] = (a,b) => (a - b);
+        this["*"] = (a,b) => (a * b);
+        this["/"] = (a, b) => (b === 0 ? NaN : a / b);
+        return this[operator](a, b);
+    }
 }
 
 function pressAC() {
     storage = null;
     input = "";
     operator = null;
+    state = STATE_ENTERING;
     updateDisplay(0);
-}
-
-function getOperationResult(operator, a, b) {
-    this["+"] = (a,b) => (a + b);
-    this["-"] = (a,b) => (a - b);
-    this["*"] = (a,b) => (a * b);
-    this["/"] = (a, b) => (b === 0 ? NaN : a / b);
-    this["="] = (a, b) => (b);
-    return this[operator](a, b);
 }
 
 function updateDisplay(content) {
