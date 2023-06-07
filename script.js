@@ -9,6 +9,9 @@ dom.leftButtons = document.querySelector(".left");
 dom.rightButtons = document.querySelector(".right");
 dom.audios = document.querySelectorAll("#clickAudio");
 
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioContext(); // fixes audio delay in Safari. dunno why
+
 buildDOM();
 pressAC();
 setupKeyboardInput();
