@@ -238,5 +238,6 @@ function setupKeyboardInput() {
         if (!button) return;
         const funcName = button.getAttribute("data-callfunction");
         window[funcName](button); // call function by its string name
+        playButtonClick();
       })
 }
