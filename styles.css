@@ -1,6 +1,12 @@
+@font-face {
+    font-family: "Calculator";
+    src: url("./fonts/digital-7-mono-italic.ttf");
+}
+
+/* GENERAL */
 * {
     box-sizing: border-box;
-    font-size: 36px;
+    border-width: 0;
 }
 
 body {
@@ -8,52 +14,94 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    font-size: 44px;
-}
 
-button {
-    aspect-ratio: 1;
+    background-color: #dbd0ca10;
 }
 
 .calculator {
-    width: 400px;
-    background-color: lightblue;
-
-    display: flex;
-    flex-wrap: wrap;
-    align-items: start;
+    overflow: hidden;
+    
+    border-radius: 1% 1% 3% 3%;
+    box-shadow: -10px 12px 30px 0px #4f4b3f99;
 }
 
-.display {
-    padding: 5px;
-    height: 40px;
-    border-radius: 10px;
-    background-color: grey;
-    
-    flex: 0 0 100%;
-    
+/* DISPLAY */
+.top {
+    padding: 10px;
+    padding-top: 20px;
+    height: 100px;
+
+    background-color: #9f9981;
+
     display: flex;
     justify-content: right;
     align-items: center;
+    position: relative;
+}
+
+.display, .numbers-trace {
+    position: absolute;
+    font-family: "Calculator";
+    font-size: 100px;
+}
+
+.display {
+    color: #191b16;
+}
+
+.numbers-trace {
+    color: #191b1610;
+}
+
+/* BUTTONS */
+.buttons {
+    background-color: #86817bdd;
+}
+
+.left, .right {
+    display: inline-grid;
+    grid-template-rows: repeat(4, 70px);
+    margin: 8px;
 }
 
 .left {
-    width: 60%;
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row-reverse;
-}
-
-.left > button {
-    width: 33.333%;
+    grid-template-columns: repeat(3, 90px);
 }
 
 .right {
-    width: 40%;
-    display: flex;
-    flex-wrap: wrap;
+    grid-template-columns: repeat(2, 90px);
+}
+
+button {
+    margin: 8px;
+
+    border-radius: 10% 10% 15% 15%;
+
+    color: #e1e8ee;
+    font-size: 35px;
+    font-family: "Gill Sans", sans-serif;
+    text-shadow: 0 0 6px #787f86;
+    /* offset-x | offset-y | blur-radius | spread-radius | color */
+    box-shadow: -2px 2px 6px 0px #4f4b3fa0;
+
+    transition: all 0.2s;
+}
+
+/* BUTTON COLORS */
+.left > button {
+    background-color: #373833;
 }
 
 .right > button {
-    width: 50%;
+    background-color: #6a737a;
+}
+
+.right > button:nth-child(1), .right > button:nth-child(2) {
+    background-color: #ffaa2b;
+    color: #313630f0;
+}
+
+/* BUTTON PRESSING */
+button:active {
+    margin: 12px;
 }

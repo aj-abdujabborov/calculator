@@ -16,20 +16,26 @@ function buildDOM() {
     addRightButtons();
 
     function addLeftButtons() {
-        for (let i = 9; i >= 1; i--) {
+        for (let i = 7; i <= 9; i++) {
             placeButton(i, i, pressDigit, dom.leftButtons);
         }
-        placeButton('+/-', '+/-', pressPlusMinus, dom.leftButtons);
-        placeButton('.', '.', pressDot, dom.leftButtons);
+        for (let i = 4; i <= 6; i++) {
+            placeButton(i, i, pressDigit, dom.leftButtons);
+        }
+        for (let i = 1; i <= 3; i++) {
+            placeButton(i, i, pressDigit, dom.leftButtons);
+        }
         placeButton(0, 0, pressDigit, dom.leftButtons);
+        placeButton('.', '.', pressDot, dom.leftButtons);
+        placeButton('±', '+/-', pressPlusMinus, dom.leftButtons);
     }
 
     function addRightButtons() {
-        placeButton("Del", "del", pressDelete, dom.rightButtons);
+        placeButton("del", "del", pressDelete, dom.rightButtons);
         placeButton("AC", "ac", pressAC, dom.rightButtons);
     
         const operators = ["+", "-", "*", "/"];
-        const operatorSymbols = ["+", "-", "×", "÷"];
+        const operatorSymbols = ["+", "−", "×", "÷"];
         operators.forEach((operator, index) => {
             placeButton(operatorSymbols[index], operator, pressOperator, dom.rightButtons)
         });
