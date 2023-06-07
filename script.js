@@ -1,4 +1,4 @@
-var storage, input, operator, lastButton;
+let storage, input, operator, lastButton;
 const LAST_IS_DIGIT = 1;
 const LAST_IS_OPERATOR = 2;
 const LAST_IS_EQUALS = 3;
@@ -25,7 +25,7 @@ function buildDOM() {
     }
 
     function addRightButtons() {
-        placeButton("Del", "del", pressDigit, dom.rightButtons);
+        placeButton("Del", "del", pressDelete, dom.rightButtons);
         placeButton("AC", "ac", pressAC, dom.rightButtons);
     
         const operators = ["+", "-", "*", "/"];
@@ -53,7 +53,7 @@ function pressDigit(e) {
 
     const value = e.currentTarget.getAttribute("data-value");
     input += value;
-    input = sanitizeInput(input);
+    input = sanitizeNumber(input);
     updateDisplay(input);
 
     lastButton = LAST_IS_DIGIT;
@@ -62,7 +62,7 @@ function pressDigit(e) {
 function pressDot(e) {
     if (input.includes(".")) return;
     input += "."
-    input = sanitizeInput(input);
+    input = sanitizeNumber(input);
     updateDisplay(input);
 }
 
@@ -84,6 +84,13 @@ function pressPercent(e) {
     }
     else {
         input = getPercentedAsString(input);
+        updateDisplay(input);
+    }
+}
+
+function pressDelete(e) {
+    if (lastButton === LAST_IS_DIGIT) {
+        input = input.slice(0, -1);
         updateDisplay(input);
     }
 }
@@ -122,11 +129,21 @@ function pressAC() {
 
 function updateDisplay(content) {
     if (isEmptyString(content)) content = "0";
-    if (isNaN(content)) content = "nope";
+    if (isNaN(content)) {
+        content = "nope";
+    }
+    else {
+        [content, dot] = getTrailingDot(content);
+        [content, negative] = getPrefixedNegative(content);
+        if (content.length > 13) {
+            content = (+content).toPrecision(13);
+        }
+        content = negative + content + dot;
+    }
     dom.display.textContent = content;
 }
 
-function sanitizeInput(string) {
+function sanitizeNumber(string) {
     if (string[0] === "0" && string[1] && string[1] !== ".") {
         return string.replace("0", "");
     }
@@ -142,12 +159,7 @@ function sanitizeInput(string) {
 function getInvertedSignAsString(num) {
     num = num.toString();
 
-    let dot = ""; 
-    if (num.slice(-1) === ".") {
-        dot = ".";
-        num = num.slice(0, -1);
-    }
-    
+    [num, dot] = getTrailingDot(num);
     if (num === "0" || isEmptyString(num)) return "-0" + dot;
     // Because (-0).toString -> "0"
     
@@ -157,12 +169,7 @@ function getInvertedSignAsString(num) {
 function getPercentedAsString(num) {
     num = num.toString();
 
-    let dot = ""; 
-    if (num.slice(-1) === ".") {
-        dot = ".";
-        num = num.slice(0, -1);
-    }
-
+    [num, dot] = getTrailingDot(num);
     if (num === "0" || isEmptyString(num)) return "0" + dot;
     else if (num === "-0") return "-0" + dot;
 
@@ -171,4 +178,24 @@ function getPercentedAsString(num) {
 
 function isEmptyString(string) {
     return string === "";
+}
+
+function getTrailingDot(string) {
+    string = string.toString();
+    let dot = ""; 
+    if (string.slice(-1) === ".") {
+        dot = ".";
+        string = string.slice(0, -1);
+    }
+    return [string, dot];
+}
+
+function getPrefixedNegative(string) {
+    string = string.toString();
+    let negative = ""; 
+    if (string.at(0) === "-") {
+        negative = "-";
+        string = string.slice(1);
+    }
+    return [string, negative];
 }
