@@ -11,6 +11,7 @@ dom.audios = document.querySelectorAll("#clickAudio");
 
 buildDOM();
 pressAC();
+setupKeyboardInput();
 
 function buildDOM() {
     addLeftButtons();
@@ -28,12 +29,12 @@ function buildDOM() {
         }
         placeButton(0, 0, pressDigit, dom.leftButtons);
         placeButton('.', '.', pressDot, dom.leftButtons);
-        placeButton('±', '+/-', pressPlusMinus, dom.leftButtons);
+        placeButton('±', '+/-', pressPlusMinus, dom.leftButtons, null);
     }
 
     function addRightButtons() {
-        placeButton("del", "del", pressDelete, dom.rightButtons);
-        placeButton("AC", "ac", pressAC, dom.rightButtons);
+        placeButton("del", "del", pressDelete, dom.rightButtons, "Backspace");
+        placeButton("AC", "ac", pressAC, dom.rightButtons, "Escape");
     
         const operators = ["+", "-", "*", "/"];
         const operatorSymbols = ["+", "−", "×", "÷"];
@@ -41,13 +42,17 @@ function buildDOM() {
             placeButton(operatorSymbols[index], operator, pressOperator, dom.rightButtons)
         });
         placeButton("%", "%", pressPercent, dom.rightButtons);
-        placeButton("=", "=", pressOperator, dom.rightButtons);
+        placeButton("=", "=", pressOperator, dom.rightButtons, "Enter");
     }
 
-    function placeButton(text, data, callback, parent) {
+    function placeButton(text, data, callback, parent, key = data) {
         const button = document.createElement("button");
         button.textContent = text;
+
         button.setAttribute("data-value", data);
+        if (key) button.setAttribute("data-key", key);
+        button.setAttribute("data-callfunction", callback.name);
+
         button.addEventListener("click", callback);
         button.addEventListener("click", playButtonClick);
         parent.appendChild(button);
@@ -59,7 +64,14 @@ function pressDigit(e) {
         storage = "";
     }
 
-    const value = e.currentTarget.getAttribute("data-value");
+    let value;
+    if (e.currentTarget) {
+        value = e.currentTarget.getAttribute("data-value");
+    }
+    else {
+        value = e.getAttribute("data-value");
+    }
+
     input += value;
     input = sanitizeNumber(input);
     updateDisplay(input);
@@ -112,7 +124,12 @@ function pressOperator(e) {
     }
     input = "";
 
-    operator = e.currentTarget.getAttribute("data-value");
+    if (e.currentTarget) {
+        operator = e.currentTarget.getAttribute("data-value");
+    }
+    else {
+        operator = e.getAttribute("data-value");
+    }
     updateDisplay(storage);
 
     lastButton = LAST_IS_OPERATOR;
@@ -215,3 +232,11 @@ function playButtonClick() {
     audio.play();
 }
 
+function setupKeyboardInput() {
+    window.addEventListener("keydown", (e) => {
+        const button = document.querySelector(`button[data-key="${e.key}"]`);
+        if (!button) return;
+        const funcName = button.getAttribute("data-callfunction");
+        window[funcName](button); // call function by its string name
+      })
+}
