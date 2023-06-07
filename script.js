@@ -1,7 +1,7 @@
-var storage, input, operator, state;
-const STATE_ENTERING = 1;
-const STATE_COMPLETE = 2;
-const STATE_EQUALS_PRESSED = 3;
+var storage, input, operator, lastButton;
+const LAST_IS_DIGIT = 1;
+const LAST_IS_OPERATOR = 2;
+const LAST_IS_EQUALS = 3;
 
 const dom = {};
 dom.display = document.querySelector(".display");
@@ -47,7 +47,7 @@ function buildDOM() {
 }
 
 function pressDigit(e) {
-    if (state === STATE_EQUALS_PRESSED) {
+    if (lastButton === LAST_IS_EQUALS) {
         storage = null;
     }
 
@@ -56,7 +56,7 @@ function pressDigit(e) {
     input = sanitizeInput(input);
     updateDisplay(input);
 
-    state = STATE_ENTERING;
+    lastButton = LAST_IS_DIGIT;
 }
 
 function pressDot(e) {
@@ -67,7 +67,7 @@ function pressDot(e) {
 }
 
 function pressPlusMinus(e) {
-    if (state === STATE_ENTERING || state == STATE_COMPLETE) {
+    if (lastButton === LAST_IS_DIGIT || lastButton == LAST_IS_OPERATOR) {
         input = getInvertedSignAsString(input);
         updateDisplay(input);
     }
@@ -78,7 +78,7 @@ function pressPlusMinus(e) {
 }
 
 function pressPercent(e) {
-    if (state === STATE_EQUALS_PRESSED || state === STATE_COMPLETE) {
+    if (lastButton === LAST_IS_EQUALS || lastButton === LAST_IS_OPERATOR) {
         storage = +getPercentedAsString(storage);
         updateDisplay(storage);
     }
@@ -100,8 +100,8 @@ function pressOperator(e) {
     operator = e.currentTarget.getAttribute("data-value");
     updateDisplay(storage);
 
-    state = STATE_COMPLETE;
-    if (operator === "=") state = STATE_EQUALS_PRESSED;
+    lastButton = LAST_IS_OPERATOR;
+    if (operator === "=") lastButton = LAST_IS_EQUALS;
 
     function getOperationResult(operator, a, b) {
         this["+"] = (a,b) => (a + b);
@@ -116,7 +116,7 @@ function pressAC() {
     storage = null;
     input = "";
     operator = null;
-    state = STATE_ENTERING;
+    lastButton = LAST_IS_DIGIT;
     updateDisplay(0);
 }
 
