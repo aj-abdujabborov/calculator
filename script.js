@@ -7,6 +7,7 @@ const dom = {};
 dom.display = document.querySelector(".display");
 dom.leftButtons = document.querySelector(".left");
 dom.rightButtons = document.querySelector(".right");
+dom.audios = document.querySelectorAll("#clickAudio");
 
 buildDOM();
 pressAC();
@@ -48,6 +49,7 @@ function buildDOM() {
         button.textContent = text;
         button.setAttribute("data-value", data);
         button.addEventListener("click", callback);
+        button.addEventListener("click", playButtonClick);
         parent.appendChild(button);
     }
 }
@@ -141,8 +143,8 @@ function updateDisplay(content) {
     else {
         [content, dot] = getTrailingDot(content);
         [content, negative] = getPrefixedNegative(content);
-        if (content.length > 13) {
-            content = (+content).toPrecision(13);
+        if (content.length > 10) {
+            content = (+content).toPrecision(10);
         }
         content = negative + content + dot;
     }
@@ -205,3 +207,11 @@ function getPrefixedNegative(string) {
     }
     return [string, negative];
 }
+
+function playButtonClick() {
+    let soundInd = Math.floor(Math.random() * 6);
+    const audio = dom.audios[soundInd];
+    audio.currentTime = 0;
+    audio.play();
+}
+
