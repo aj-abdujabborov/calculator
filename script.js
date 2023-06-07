@@ -116,7 +116,7 @@ function updateDisplay(content) {
 }
 
 function sanitizeInput(string) {
-    if (string[0] === "0" && string[1] !== ".") {
+    if (string[0] === "0" && string[1] && string[1] !== ".") {
         return string.replace("0", "");
     }
     else if (string.slice(0,2) === "-0" && string[2] !== ".") {
