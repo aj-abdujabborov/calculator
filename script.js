@@ -48,7 +48,7 @@ function buildDOM() {
 
 function pressDigit(e) {
     if (lastButton === LAST_IS_EQUALS) {
-        storage = null;
+        storage = "";
     }
 
     const value = e.currentTarget.getAttribute("data-value");
@@ -72,14 +72,14 @@ function pressPlusMinus(e) {
         updateDisplay(input);
     }
     else {
-        storage = +getInvertedSignAsString(storage);
+        storage = getInvertedSignAsString(storage);
         updateDisplay(storage);
     }
 }
 
 function pressPercent(e) {
     if (lastButton === LAST_IS_EQUALS || lastButton === LAST_IS_OPERATOR) {
-        storage = +getPercentedAsString(storage);
+        storage = getPercentedAsString(storage);
         updateDisplay(storage);
     }
     else {
@@ -89,11 +89,11 @@ function pressPercent(e) {
 }
 
 function pressOperator(e) {
-    if (storage === null) {
-        storage = +input;
+    if (isEmptyString(storage)) {
+        storage = input;
     }
     else if (!isEmptyString(input)) {
-        storage = getOperationResult(operator, storage, +input);
+        storage = getOperationResult(operator, +storage, +input).toString();
     }
     input = "";
 
@@ -113,7 +113,7 @@ function pressOperator(e) {
 }
 
 function pressAC() {
-    storage = null;
+    storage = "";
     input = "";
     operator = null;
     lastButton = LAST_IS_DIGIT;
