@@ -15,41 +15,39 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-
     min-height: 500px;
     min-width: 500px;
 
-    background-color: #dbd0ca10;
+    background-color: #dad1cc25;
 }
 
 .calculator {
     overflow: hidden;
-    
     border-radius: 2% 2% 3% 3%;
-    box-shadow: -10px 12px 30px 0px #4f4b3f99;
+    box-shadow: -10px 12px 60px 0px #4f4b3f50;
 }
 
 /* OUTSIDE DISPLAY */
-.top {
+.display-outer {
     background-color: #313630;
     padding: 30px 25px 15px;
 }
 
 .print {
-    font-size: 15px;
+    font-size: 18px;
     color: #e1e8ee;
-    text-shadow: 0 0 6px #787f86;
+    text-shadow: 0 0 4px #787f86;
     margin: 3px 0;
 
     display: flex;
     justify-content: space-between;
 }
 
-.print-text {
+.print > div {
     padding: 2px 5px;
 }
 
-.display-island {
+.display-inner {
     background-color: #d0ccc9;
     padding: 10px 20px;
     border-radius: 10px;
@@ -67,8 +65,9 @@ body {
     display: flex;
     justify-content: right;
     align-items: center;
-    position: relative;
     overflow: hidden;
+
+    position: relative;
 }
 
 /* DISPLAY */
@@ -86,15 +85,32 @@ body {
     color: #191b1610;
 }
 
-/* DIVIDER */
 .divider {
     height: 8px;
     background-color: #121411;
 }
 
 /* BUTTONS */
-.buttons {
+.buttons-panel {
     background-color: #86817bdd;
+}
+
+button {
+    margin: 8px;
+    border-radius: 10px;
+
+    color: #e1e8ee;
+    font-size: 35px;
+    text-shadow: 0 0 6px #787f86;
+    /* offset-x | offset-y | blur-radius | spread-radius | color */
+    box-shadow: -2px 2px 6px 0px #4f4b3fa0;
+
+    transition: all 0.07s;
+}
+
+button:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 5px 3px #4f4b3fa0;
 }
 
 .left, .right {
@@ -112,20 +128,6 @@ body {
     grid-template-columns: repeat(2, 90px);
 }
 
-button {
-    margin: 8px;
-
-    border-radius: 10% 10% 15% 15%;
-
-    color: #e1e8ee;
-    font-size: 35px;
-    text-shadow: 0 0 6px #787f86;
-    /* offset-x | offset-y | blur-radius | spread-radius | color */
-    box-shadow: -2px 2px 6px 0px #4f4b3fa0;
-
-    transition: all 0.07s;
-}
-
 /* BUTTON COLORS */
 .left > button {
     background-color: #373833;
@@ -138,10 +140,4 @@ button {
 .right > button:nth-child(1), .right > button:nth-child(2) {
     background-color: #ffaa2b;
     color: #313630f0;
-}
-
-/* BUTTON PRESSING */
-button:active {
-    transform: scale(0.95);
-    box-shadow: 0 0 5px 3px #4f4b3fa0;
 }
