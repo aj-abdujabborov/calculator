@@ -143,8 +143,8 @@ function updateDisplay(content) {
     else {
         [content, dot] = getTrailingDot(content);
         [content, negative] = getPrefixedNegative(content);
-        if (content.length > 10) {
-            content = (+content).toPrecision(10);
+        if (content.length > 8) {
+            content = (+content).toPrecision(4);
         }
         content = negative + content + dot;
     }
