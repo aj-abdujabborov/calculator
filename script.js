@@ -125,6 +125,7 @@ function sanitizeInput(string) {
     else if (string[0] === ".") {
         return string.replace(".", "0.");
     }
+    return string;
 }
 
 function getInvertedSignAsString(num) {
