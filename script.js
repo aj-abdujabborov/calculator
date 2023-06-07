@@ -52,11 +52,8 @@ function pressDigit(e) {
     }
 
     const value = e.currentTarget.getAttribute("data-value");
-    if (input.startsWith("0") || input.startsWith("-0")) {
-        if (value == 0) return;
-        input = input.replace("0", "");
-    }
     input += value;
+    input = sanitizeInput(input);
     updateDisplay(input);
 
     state = STATE_ENTERING;
@@ -64,11 +61,8 @@ function pressDigit(e) {
 
 function pressDot(e) {
     if (input.includes(".")) return;
-    if (isEmptyString(input)) {
-        input = "0.";
-        return;
-    }
-    input += ".";
+    input += "."
+    input = sanitizeInput(input);
     updateDisplay(input);
 }
 
@@ -80,13 +74,6 @@ function pressPlusMinus(e) {
     else {
         storage = +getInvertedSignAsString(storage);
         updateDisplay(storage);
-    }
-
-    function getInvertedSignAsString(num) {
-        num = num.toString();
-        if (num === "0" || num === "") return "-0";
-        return (+num * -1).toString();
-        // Because (-0).toString -> "0"
     }
 }
 
@@ -126,6 +113,33 @@ function updateDisplay(content) {
     if (isEmptyString(content)) content = "0";
     if (isNaN(content)) content = "nope";
     dom.display.textContent = content;
+}
+
+function sanitizeInput(string) {
+    if (string[0] === "0" && string[1] !== ".") {
+        return string.replace("0", "");
+    }
+    else if (string.slice(0,2) === "-0" && string[2] !== ".") {
+        return string.replace("-0", "-");
+    }
+    else if (string[0] === ".") {
+        return string.replace(".", "0.");
+    }
+}
+
+function getInvertedSignAsString(num) {
+    num = num.toString();
+
+    let dot = ""; 
+    if (num.slice(-1) === ".") {
+        dot = ".";
+        num = num.slice(0, -1);
+    }
+    
+    if (num === "0" || num === "") return "-0" + dot;
+    // Because (-0).toString -> "0"
+    
+    return (+num * -1).toString() + dot;
 }
 
 function isEmptyString(string) {
