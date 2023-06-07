@@ -237,7 +237,6 @@ function playButtonClick() {
 
 function setupKeyboardInput() {
     window.addEventListener("keydown", (e) => {
-        console.log(e.key);
         const button = document.querySelector(`button[data-key="${e.key}"]`);
         if (!button) return;
         const funcName = button.getAttribute("data-callfunction");
