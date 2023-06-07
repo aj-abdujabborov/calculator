@@ -50,7 +50,7 @@ function buildDOM() {
         button.textContent = text;
 
         button.setAttribute("data-value", data);
-        if (key) button.setAttribute("data-key", key);
+        if (key !== null) button.setAttribute("data-key", key);
         button.setAttribute("data-callfunction", callback.name);
 
         button.addEventListener("click", callback);
@@ -234,6 +234,7 @@ function playButtonClick() {
 
 function setupKeyboardInput() {
     window.addEventListener("keydown", (e) => {
+        console.log(e.key);
         const button = document.querySelector(`button[data-key="${e.key}"]`);
         if (!button) return;
         const funcName = button.getAttribute("data-callfunction");
