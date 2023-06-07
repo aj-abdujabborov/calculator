@@ -33,7 +33,7 @@ function buildDOM() {
         operators.forEach((operator, index) => {
             placeButton(operatorSymbols[index], operator, pressOperator, dom.rightButtons)
         });
-        placeButton("%", "%", pressDigit, dom.rightButtons);
+        placeButton("%", "%", pressPercent, dom.rightButtons);
         placeButton("=", "=", pressOperator, dom.rightButtons);
     }
 
@@ -74,6 +74,17 @@ function pressPlusMinus(e) {
     else {
         storage = +getInvertedSignAsString(storage);
         updateDisplay(storage);
+    }
+}
+
+function pressPercent(e) {
+    if (state === STATE_EQUALS_PRESSED || state === STATE_COMPLETE) {
+        storage = +getPercentedAsString(storage);
+        updateDisplay(storage);
+    }
+    else {
+        input = getPercentedAsString(input);
+        updateDisplay(input);
     }
 }
 
@@ -137,10 +148,25 @@ function getInvertedSignAsString(num) {
         num = num.slice(0, -1);
     }
     
-    if (num === "0" || num === "") return "-0" + dot;
+    if (num === "0" || isEmptyString(num)) return "-0" + dot;
     // Because (-0).toString -> "0"
     
     return (+num * -1).toString() + dot;
+}
+
+function getPercentedAsString(num) {
+    num = num.toString();
+
+    let dot = ""; 
+    if (num.slice(-1) === ".") {
+        dot = ".";
+        num = num.slice(0, -1);
+    }
+
+    if (num === "0" || isEmptyString(num)) return "0" + dot;
+    else if (num === "-0") return "-0" + dot;
+
+    return (+num / 100).toString();
 }
 
 function isEmptyString(string) {
